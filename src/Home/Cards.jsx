@@ -4,6 +4,7 @@ import Card from './Card.jsx'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, doc, getDoc, getDocs, collection, query} from "firebase/firestore";
+import { useState } from 'react';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -28,7 +29,12 @@ const solosRef = collection(db, "solos");
 const solosQuery = query(solosRef);
 const querySnapshot = await getDocs(solosQuery);
 
-
+let data = [];
+querySnapshot.forEach((doc) => {
+    if(doc.data().name != null) {
+        data.push(doc.data());
+    }
+});
 
 // if (docSnap.exists()) {
 //     console.log("Document data:", docSnap.data());
@@ -40,17 +46,42 @@ const querySnapshot = await getDocs(solosQuery);
 //     console.log(doc.data().description);
 // })
 function Cards() {
-    let data = [];
-    querySnapshot.forEach((doc) => {
-        if(doc.data().name != null) {
-            data.push(doc.data());
-        }
-    });
+    const [sort, setSort] = useState("difficulty");
+
+    
     return (
-        <div className="grid grid-cols-3 gap-4 p-4">
-            
-            {data.map((solo) => (<Card key={solo.name} data={solo} />))}
-            
+        <div className='px-10 h-7/10'>
+            <div className='w-full h-20 items-center py-5 px-10 '>
+                <div className='float-left'>
+                <p className='text-black text-2xl relative'>
+                    {data.length  + " results found"}
+                </p>
+                </div>
+                <div className='float-right flex ' >
+                    <div className='mx-3 w-30 h-10 bg-white border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm '>
+                        {'difficulty' +(sort == 'difficulty' ? '' : '')}
+                    </div>
+                    <div className='mx-3 w-30 h-10 bg-white border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm'>
+                        {'length' +(sort == 'difficulty' ? '' : '')}
+                    </div>
+                    <div className='mx-3 w-30 h-10 bg-white border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm'>
+                        {'stars' +(sort == 'difficulty' ? '' : '')}
+                    </div>
+                </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4 h-full">
+                
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+
+                
+            </div>
         </div>
     )
 }
