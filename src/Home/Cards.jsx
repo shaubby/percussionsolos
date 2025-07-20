@@ -29,12 +29,8 @@ const solosRef = collection(db, "solos");
 const solosQuery = query(solosRef);
 const querySnapshot = await getDocs(solosQuery);
 
-let data = [];
-querySnapshot.forEach((doc) => {
-    if(doc.data().name != null) {
-        data.push(doc.data());
-    }
-});
+
+
 
 // if (docSnap.exists()) {
 //     console.log("Document data:", docSnap.data());
@@ -45,12 +41,67 @@ querySnapshot.forEach((doc) => {
 // querySnapshot.forEach((doc) => {
 //     console.log(doc.data().description);
 // })
+function compareStars(a, b) {
+    if (a.stars < b.stars) {
+        return -1;
+    }
+    if (a.stars > b.stars) {
+        return 1;
+    }
+    return 0;
+}
+function compareLength(a, b) {
+    if (a.length < b.length) {
+        return -1;
+    }
+    if (a.length > b.length) {
+        return 1;
+    }
+    return 0;
+}
+function compareDifficulty(a, b) {
+    if (a.difficulty < b.difficulty) {
+        return -1;
+    }
+    if (a.difficulty > b.difficulty) {
+        return 1;
+    }
+    return 0;
+}
 function Cards() {
-    const [sort, setSort] = useState("difficulty");
+    const [sort, setSort] = useState("stars");
+    const [order, setOrder] = useState("descending");
+    const [data, setData] = useState(querySnapshot.docs.map((doc) => doc.data()));
 
+
+
+    const handleClick = (button) => {
+        if(button == 'difficulty') {
+            if(sort === 'difficulty') {
+                setOrder(order === 'ascending' ? 'descending' : 'ascending');
+                data.reverse();
+            } else {
+                setSort('difficulty');
+            }
+        } else if(button == 'stars') {
+            if(sort === 'stars') {
+                setOrder(order === 'ascending' ? 'descending' : 'ascending');
+                data.reverse();
+            } else {
+                setSort('stars');
+            }
+        }  else if(button == 'length') {
+            if(sort === 'length') {
+                setOrder(order === 'ascending' ? 'descending' : 'ascending');
+                data.reverse();
+            } else {
+                setSort('length');
+            }
+        }
+    }
     
     return (
-        <div className='px-10 h-7/10'>
+        <div className='px-10 h-7/10 min-h-[90vh] max-w-300'>
             <div className='w-full h-20 items-center py-5 px-10 '>
                 <div className='float-left'>
                 <p className='text-black text-2xl relative'>
@@ -58,26 +109,19 @@ function Cards() {
                 </p>
                 </div>
                 <div className='float-right flex ' >
-                    <div className='mx-3 w-30 h-10 bg-white border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm '>
-                        {'difficulty' +(sort == 'difficulty' ? '' : '')}
+                    <div onClick={() => handleClick('difficulty')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'difficulty' ? 'bg-blue-200' : 'bg-white')}>
+                        {'difficulty ' + (sort == 'difficulty' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
                     </div>
-                    <div className='mx-3 w-30 h-10 bg-white border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm'>
-                        {'length' +(sort == 'difficulty' ? '' : '')}
+                    <div onClick={() => handleClick('length')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'length' ? 'bg-blue-200' : 'bg-white')}>
+                        {'length ' + (sort == 'length' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
                     </div>
-                    <div className='mx-3 w-30 h-10 bg-white border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm'>
-                        {'stars' +(sort == 'difficulty' ? '' : '')}
+                    <div onClick={() => handleClick('stars')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'stars' ? 'bg-blue-200' : 'bg-white')}>
+                        {'stars ' + (sort == 'stars' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
                     </div>
                 </div>
             </div>
             <div className="grid grid-cols-3 gap-4 h-full">
                 
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
                 {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
 
                 

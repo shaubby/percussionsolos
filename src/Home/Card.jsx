@@ -54,9 +54,9 @@ function Card(props) {
             </div>
             <div className="bg-black min-h-1/4 h-auto flex flex-col p-3">
                 <div className="flex-1">
-                <p className="text-white text- font-bold">{props.data.name  + " - " + props.data.composer}</p>
+                <p className="text-white text- font-bold mb-2">{props.data.name  + " - " + props.data.composer}</p>
                 </div>
-                <div className="flex flex-row flex-1 gap-2 select-none">
+                <div className="flex flex-row flex-1 gap-2 select-none mb-2">
                     <div className={"text-black w-full rounded-md text-center " + (getColor(props.data.difficulty))} >{props.data.difficulty + "/10"}</div>
                     <div className={"text-black w-full rounded-md text-center cursor-pointer "  + (starred ? "bg-green-300" : "bg-white")} onClick={handleClick}>{"★: " + stars}</div>
                     <div className={"text-black w-full rounded-md text-center " + getTimeColor(props.data.duration) } >{props.data.duration}</div>
