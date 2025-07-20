@@ -22,7 +22,6 @@ function getTimeColor(time) {
 
 }
 function Card(props) {
-    console.log("Card component loaded with data:", props.data.name);
     
 
     const [starred, setStarred] = useState(false);
@@ -50,7 +49,7 @@ function Card(props) {
     return (
         <div className="w-full h-80 rounded-lg shadow-lg border-3 border-black flex flex-col">
             <div className="h-3/4 p-3 video-container">
-            <iframe className="rounded-lg h-40 w-fit" src={props.data.embed} />
+            <iframe className="rounded-lg h-40 w-fit" src={'https://www.youtube.com/embed/' + props.data.embed} />
             </div>
             <div className="bg-black min-h-1/4 h-auto flex flex-col p-3">
                 <div className="flex-1">

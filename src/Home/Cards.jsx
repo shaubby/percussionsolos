@@ -43,30 +43,37 @@ const querySnapshot = await getDocs(solosQuery);
 // })
 function compareStars(a, b) {
     if (a.stars < b.stars) {
-        return -1;
+        return 1;
     }
     if (a.stars > b.stars) {
-        return 1;
+        return -1;
     }
     return 0;
 }
 
 function compareDuration(a, b) {
-  const isValid = str => /^\d+:\d{2}$/.test(str);
-  const toSeconds = str => {
-    if (!isValid(str)) return 0; // or throw error
-    const [min, sec] = str.split(':').map(Number);
-    return min * 60 + sec;
-  };
-  return  toSeconds(a.length) - toSeconds(b.length);
+  
+
+    const [min1, sec1] = a.duration.split(':').map(Number);
+    let duration1= min1 * 60 + sec1;
+    const [min2, sec2] = b.duration.split(':').map(Number);
+    let duration2= min2 * 60 + sec2;
+    console.log(duration1 + " " + duration2)
+    if (duration1 < duration2) {
+        return 1;
+    }
+    if (duration1 > duration2) {
+        return -1;
+    }
+    return 0;
 }
 
 function compareDifficulty(a, b) {
     if (a.difficulty < b.difficulty) {
-        return -1;
+        return 1;
     }
     if (a.difficulty > b.difficulty) {
-        return 1;
+        return -1;
     }
     return 0;
 }
@@ -82,30 +89,32 @@ function Cards() {
         if(button == 'difficulty') {
             if(sort === 'difficulty') {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
-                data.reverse();
+                setData([...data].reverse());
             } else {
-                setData(data.sort(compareDifficulty))
+                setData([...data].sort(compareDifficulty));
                 setOrder('descending');
                 setSort('difficulty');
             }
         } else if(button == 'stars') {
+
             if(sort === 'stars') {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
-                data.reverse();
+                setData([...data].reverse());
             } else {
-                data.sort(compareStars)
+                setData([...data].sort(compareStars));
                 setOrder('descending');
                 setSort('stars');
             }
         }  else if(button == 'duration') {
             if(sort === 'duration') {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
-                data.reverse();
+                setData([...data].reverse());
             } else {
-                data.sort(compareDuration)
+                setData([...data].sort(compareDuration));
                 setOrder('descending');
                 setSort('duration');
             }
+
         }
         console.log (data);
     }
