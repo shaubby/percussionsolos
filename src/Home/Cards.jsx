@@ -50,15 +50,17 @@ function compareStars(a, b) {
     }
     return 0;
 }
-function compareLength(a, b) {
-    if (a.length < b.length) {
-        return -1;
-    }
-    if (a.length > b.length) {
-        return 1;
-    }
-    return 0;
+
+function compareDuration(a, b) {
+  const isValid = str => /^\d+:\d{2}$/.test(str);
+  const toSeconds = str => {
+    if (!isValid(str)) return 0; // or throw error
+    const [min, sec] = str.split(':').map(Number);
+    return min * 60 + sec;
+  };
+  return  toSeconds(a.length) - toSeconds(b.length);
 }
+
 function compareDifficulty(a, b) {
     if (a.difficulty < b.difficulty) {
         return -1;
@@ -68,6 +70,7 @@ function compareDifficulty(a, b) {
     }
     return 0;
 }
+
 function Cards() {
     const [sort, setSort] = useState("stars");
     const [order, setOrder] = useState("descending");
@@ -81,6 +84,8 @@ function Cards() {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
                 data.reverse();
             } else {
+                setData(data.sort(compareDifficulty))
+                setOrder('descending');
                 setSort('difficulty');
             }
         } else if(button == 'stars') {
@@ -88,16 +93,21 @@ function Cards() {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
                 data.reverse();
             } else {
+                data.sort(compareStars)
+                setOrder('descending');
                 setSort('stars');
             }
-        }  else if(button == 'length') {
-            if(sort === 'length') {
+        }  else if(button == 'duration') {
+            if(sort === 'duration') {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
                 data.reverse();
             } else {
-                setSort('length');
+                data.sort(compareDuration)
+                setOrder('descending');
+                setSort('duration');
             }
         }
+        console.log (data);
     }
     
     return (
@@ -112,8 +122,8 @@ function Cards() {
                     <div onClick={() => handleClick('difficulty')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'difficulty' ? 'bg-blue-200' : 'bg-white')}>
                         {'difficulty ' + (sort == 'difficulty' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
                     </div>
-                    <div onClick={() => handleClick('length')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'length' ? 'bg-blue-200' : 'bg-white')}>
-                        {'length ' + (sort == 'length' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
+                    <div onClick={() => handleClick('duration')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'duration' ? 'bg-blue-200' : 'bg-white')}>
+                        {'duration ' + (sort == 'duration' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
                     </div>
                     <div onClick={() => handleClick('stars')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'stars' ? 'bg-blue-200' : 'bg-white')}>
                         {'stars ' + (sort == 'stars' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
