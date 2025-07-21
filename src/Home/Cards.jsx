@@ -3,8 +3,10 @@ import Card from './Card.jsx'
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, doc, getDoc, getDocs, collection, query} from "firebase/firestore";
+import { getFirestore, doc, getDoc, getDocs, collection, query } from "firebase/firestore";
 import { useState } from 'react';
+import { Popup } from './Popup.jsx';
+import { POSSIBLE_ROLES } from 'firebase/ai';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -52,12 +54,12 @@ function compareStars(a, b) {
 }
 
 function compareDuration(a, b) {
-  
+
 
     const [min1, sec1] = a.duration.split(':').map(Number);
-    let duration1= min1 * 60 + sec1;
+    let duration1 = min1 * 60 + sec1;
     const [min2, sec2] = b.duration.split(':').map(Number);
-    let duration2= min2 * 60 + sec2;
+    let duration2 = min2 * 60 + sec2;
     console.log(duration1 + " " + duration2)
     if (duration1 < duration2) {
         return 1;
@@ -86,8 +88,8 @@ function Cards() {
 
 
     const handleClick = (button) => {
-        if(button == 'difficulty') {
-            if(sort === 'difficulty') {
+        if (button == 'difficulty') {
+            if (sort === 'difficulty') {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
                 setData([...data].reverse());
             } else {
@@ -95,9 +97,9 @@ function Cards() {
                 setOrder('descending');
                 setSort('difficulty');
             }
-        } else if(button == 'stars') {
+        } else if (button == 'stars') {
 
-            if(sort === 'stars') {
+            if (sort === 'stars') {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
                 setData([...data].reverse());
             } else {
@@ -105,8 +107,8 @@ function Cards() {
                 setOrder('descending');
                 setSort('stars');
             }
-        }  else if(button == 'duration') {
-            if(sort === 'duration') {
+        } else if (button == 'duration') {
+            if (sort === 'duration') {
                 setOrder(order === 'ascending' ? 'descending' : 'ascending');
                 setData([...data].reverse());
             } else {
@@ -116,34 +118,42 @@ function Cards() {
             }
 
         }
-        console.log (data);
+        console.log(data);
     }
-    
-    return (
-        <div className='px-10 h-7/10 min-h-[90vh] max-w-300'>
-            <div className='w-full h-20 items-center py-5 px-10 '>
-                <div className='float-left'>
-                <p className='text-black text-2xl relative'>
-                    {data.length  + " results found"}
-                </p>
-                </div>
-                <div className='float-right flex ' >
-                    <div onClick={() => handleClick('difficulty')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'difficulty' ? 'bg-blue-200' : 'bg-white')}>
-                        {'difficulty ' + (sort == 'difficulty' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
-                    </div>
-                    <div onClick={() => handleClick('duration')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'duration' ? 'bg-blue-200' : 'bg-white')}>
-                        {'duration ' + (sort == 'duration' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
-                    </div>
-                    <div onClick={() => handleClick('stars')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'stars' ? 'bg-blue-200' : 'bg-white')}>
-                        {'stars ' + (sort == 'stars' ? (order == 'ascending' ? '↓' : '↑') : '-' )}
-                    </div>
-                </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4 h-full">
-                
-                {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
 
-                
+    return (
+        <div className='relative  w-full h-full flex justify-center'>
+            <div className='left-0 absolute h-full w-full z-50 bg-black opacity-50'></div>
+
+            <div className='px-10 h-7/10 min-h-[90vh] max-w-300 relative'>
+
+
+                <Popup />
+
+                <div className='w-full h-20 items-center py-5 px-10 '>
+                    <div className='float-left'>
+                        <p className='text-black text-2xl relative'>
+                            {data.length + " results found"}
+                        </p>
+                    </div>
+                    <div className='float-right flex ' >
+                        <div onClick={() => handleClick('difficulty')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'difficulty' ? 'bg-blue-200' : 'bg-white')}>
+                            {'difficulty ' + (sort == 'difficulty' ? (order == 'ascending' ? '↓' : '↑') : '-')}
+                        </div>
+                        <div onClick={() => handleClick('duration')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'duration' ? 'bg-blue-200' : 'bg-white')}>
+                            {'duration ' + (sort == 'duration' ? (order == 'ascending' ? '↓' : '↑') : '-')}
+                        </div>
+                        <div onClick={() => handleClick('stars')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'stars' ? 'bg-blue-200' : 'bg-white')}>
+                            {'stars ' + (sort == 'stars' ? (order == 'ascending' ? '↓' : '↑') : '-')}
+                        </div>
+                    </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 h-full">
+
+                    {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+
+
+                </div>
             </div>
         </div>
     )
