@@ -84,8 +84,10 @@ function Cards() {
     const [sort, setSort] = useState("stars");
     const [order, setOrder] = useState("descending");
     const [data, setData] = useState(querySnapshot.docs.map((doc) => doc.data()));
-
-
+    const [popup, setPopup] = useState(true);
+    const [popupData, setPopupData] = useState(data[0]);
+    console.log(popupData);
+    
 
     const handleClick = (button) => {
         if (button == 'difficulty') {
@@ -128,7 +130,7 @@ function Cards() {
             <div className='px-10 h-7/10 min-h-[90vh] max-w-300 relative'>
 
 
-                <Popup />
+                {popup ? <Popup data={popupData} /> : ''}
 
                 <div className='w-full h-20 items-center py-5 px-10 '>
                     <div className='float-left'>
