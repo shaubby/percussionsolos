@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, doc, getDoc, getDocs, addDoc, collection, query, updateDoc} from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDocs, addDoc, collection, query, updateDoc} from "firebase/firestore";
 
 function youtube_parser(url) {
     var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
@@ -27,6 +27,40 @@ const solosRef = collection(db, "solos");
 const solosQuery = query(solosRef);
 const querySnapshot = await getDocs(solosQuery);
 const data = querySnapshot.docs.map((doc) => doc.data());
+
+function parseSteveWeiss(name, composer) {
+    const nameList = name.split(' ');
+    const composerList = composer.split(' ');
+
+    let link = 'https://www.steveweissmusic.com/category/s?keyword=';
+    for(var i = 0; i < nameList.length; i++) {
+        link += nameList[i] + '+';
+    }
+    for(var i = 0; i < composerList.length; i++) {
+        link += composerList[i];
+        if(i != composerList.length-1) {
+            link += '+';
+        }
+    }
+    return link;
+}
+
+function parseAmazon(name, composer) {
+    const nameList = name.split(' ');
+    const composerList = composer.split(' ');
+
+    let link = 'https://www.amazon.com/s?k=';
+    for(var i = 0; i < nameList.length; i++) {
+        link += nameList[i] + '+';
+    }
+    for(var i = 0; i < composerList.length; i++) {
+        link += composerList[i];
+        if(i != composerList.length-1) {
+            link += '+';
+        }
+    }
+    return link;
+}
 
 
 function Home() {
@@ -89,7 +123,7 @@ function Home() {
             form.current.reset();
 
             //submit form
-            const docRef = await addDoc(collection(db, "solos"), {
+            const docRef = await setDoc(doc(db, "solos", title), {
                 composer: composer,
                 description: description,
                 difficulty: difficulty,
@@ -97,6 +131,8 @@ function Home() {
                 embed: youtube_parser(youtube),
                 name: title,
                 stars: 0,
+                storeNames: ['Steve Weiss', 'Amazon'],
+                storeLinks: [parseSteveWeiss(title, composer), parseAmazon(title, composer)],
             });
         }
     }
