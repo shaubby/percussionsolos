@@ -84,10 +84,18 @@ function Cards() {
     const [sort, setSort] = useState("stars");
     const [order, setOrder] = useState("descending");
     const [data, setData] = useState(querySnapshot.docs.map((doc) => doc.data()));
-    const [popup, setPopup] = useState(true);
+    const [popup, setPopup] = useState();
     const [popupData, setPopupData] = useState(data[0]);
     console.log(popupData);
     
+    const openPopup = (tData) => {
+        setPopup(true);
+        setPopupData(tData);
+    }
+
+    const closePopup = () => {
+        setPopup(false);
+    }
 
     const handleClick = (button) => {
         if (button == 'difficulty') {
@@ -124,35 +132,35 @@ function Cards() {
     }
 
     return (
-        <div className='relative  w-full h-full flex justify-center'>
-            <div className='left-0 absolute h-full w-full z-50 bg-black opacity-50'></div>
+        <div className='relative w-full h-full flex justify-center'>
+            {popup && <div className='left-0 absolute h-full w-full z-50 bg-black opacity-50 '></div>}
+            {popup ? <Popup closePopup={closePopup} data={popupData} /> : ''}
+            <div className='px-10 h-7/10 min-h-[90vh]  max-w-300 relative'>
 
-            <div className='px-10 h-7/10 min-h-[90vh] max-w-300 relative'>
 
+                
 
-                {popup ? <Popup data={popupData} /> : ''}
-
-                <div className='w-full h-20 items-center py-5 px-10 '>
-                    <div className='float-left'>
-                        <p className='text-black text-2xl relative'>
+                <div className='w-full items-center xl:py-5 py-3 flex flex-row justify-around'>
+                    <div className=''>
+                        <p className='text-black xl:text-2xl text-lg relative'>
                             {data.length + " results found"}
                         </p>
                     </div>
-                    <div className='float-right flex ' >
-                        <div onClick={() => handleClick('difficulty')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'difficulty' ? 'bg-blue-200' : 'bg-white')}>
+                    <div className=' flex ' >
+                        <div onClick={() => handleClick('difficulty')} className={'mx-3 xl:w-40 w-30 xl:h-10 h-8 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black xl:text-sm text-xs ' + (sort === 'difficulty' ? 'bg-blue-200' : 'bg-white')}>
                             {'difficulty ' + (sort == 'difficulty' ? (order == 'ascending' ? '↓' : '↑') : '-')}
                         </div>
-                        <div onClick={() => handleClick('duration')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'duration' ? 'bg-blue-200' : 'bg-white')}>
+                        <div onClick={() => handleClick('duration')} className={'mx-3 xl:w-40 w-30 xl:h-10 h-8 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black xl:text-sm text-xs ' + (sort === 'duration' ? 'bg-blue-200' : 'bg-white')}>
                             {'duration ' + (sort == 'duration' ? (order == 'ascending' ? '↓' : '↑') : '-')}
                         </div>
-                        <div onClick={() => handleClick('stars')} className={'mx-3 w-40 h-10 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black text-sm ' + (sort === 'stars' ? 'bg-blue-200' : 'bg-white')}>
+                        <div onClick={() => handleClick('stars')} className={'mx-3 xl:w-40 w-30 xl:h-10 h-8 border-2 rounded-full border-black flex items-center justify-center cursor-pointer text-black xl:text-sm text-xs ' + (sort === 'stars' ? 'bg-blue-200' : 'bg-white')}>
                             {'stars ' + (sort == 'stars' ? (order == 'ascending' ? '↓' : '↑') : '-')}
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-3 gap-4 h-full">
+                <div className="grid lg:grid-cols-3 grid-cols-2 gap-4 h-full">
 
-                    {data.map((solo) => (<Card db={db} key={solo.name} data={solo} />))}
+                    {data.map((solo) => (<Card openPopup={openPopup} db={db} key={solo.name} data={solo} />))}
 
 
                 </div>

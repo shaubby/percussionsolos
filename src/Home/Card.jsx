@@ -47,17 +47,17 @@ function Card(props) {
     const docRef = doc(props.db, "solos", props.data.name);
 
     return (
-        <div className="w-full h-80 rounded-lg shadow-lg border-3 border-black flex flex-col">
+        <div className="w-full h-80 rounded-lg shadow-lg border-3 border-black flex flex-col cursor-pointer" onClick={() => {props.openPopup(props.data)}}>
             <div className="h-3/4 p-3 video-container">
             <iframe className="rounded-lg h-40 w-fit" src={'https://www.youtube.com/embed/' + props.data.embed} />
             </div>
-            <div className="bg-black min-h-1/4 h-auto flex flex-col p-3">
+            <div className="bg-black min-h-1/4 h-auto flex flex-col p-3 ">
                 <div className="flex-1">
-                <p className="text-white text- font-bold mb-2">{props.data.name  + " - " + props.data.composer}</p>
+                <p className="text-white text- font-bold mb-2 ">{props.data.name  + " - " + props.data.composer}</p>
                 </div>
                 <div className="flex flex-row flex-1 gap-2 select-none mb-2">
                     <div className={"text-black w-full rounded-md text-center " + (getColor(props.data.difficulty))} >{props.data.difficulty + "/10"}</div>
-                    <div className={"text-black w-full rounded-md text-center cursor-pointer "  + (starred ? "bg-green-300" : "bg-white")} onClick={handleClick}>{"★: " + stars}</div>
+                    <div className={"text-black w-full rounded-md text-center cursor-pointer "  + (starred ? "bg-green-300" : "bg-white")} onClick={(event) => {event.stopPropagation(); handleClick()}}>{"★: " + stars}</div>
                     <div className={"text-black w-full rounded-md text-center " + getTimeColor(props.data.duration) } >{props.data.duration}</div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, updateDoc, getDoc, getDocs, addDoc, collection, query, updateDoc} from "firebase/firestore";
+import { getFirestore, doc, updateDoc, getDoc, getDocs, addDoc, collection, query} from "firebase/firestore";
 const firebaseConfig = {
     apiKey: "AIzaSyBKuHm4UFshf0a6InTRcaoeHrHqUU9o9sA",
     authDomain: "percussion-solos-65cd7.firebaseapp.com",
@@ -26,36 +26,55 @@ export function Store(props) {
 
     const [store, setStore] = useState('');
     const [link, setLink] = useState('');
-    const [error, setError] = useState(true);
+    const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('error');
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    const handleSubmit = async (event) => {
+        //event.preventDefault();
         if(link.length < 8) {
             setError(true);
             setErrorMessage('Link is invalid');
         } else if (store.length < 1 || store.length > 30) {
             setError(true);
             setErrorMessage('Store is invalid');
-        }
-        let soloIndex = -1;
-        for(var i = 0; i < data.length; i++) {
-            if(data[i].name == props.data.name) {
-                soloIndex=i;
+        } else {
+            let soloIndex = -1;
+            for(var i = 0; i < data.length; i++) {
+                console.log(data[i]);
+                if(data[i].name == props.data.name) {
+                    soloIndex=i;
+                }
             }
-        }
-        const docRef = doc(db, "solos", "yourDocumentId");
-        let soloData = data[i];
-        if(soloData.stores.indexOf(store)) {
             
+            let soloData = data[soloIndex];
+            const docRef = doc(db, "solos", soloData.name);
+            let storeCopy = soloData.storeNames;
+            let linkCopy = soloData.storeLinks;
+            console.log(soloData.storeNames);
+            if(soloData.storeNames.indexOf(store) == -1) {
+                if(soloData.storeNames[0] == "") {
+                    storeCopy[0] = store;
+                    linkCopy[0] = link;
+                } else {
+                    storeCopy.push(store);
+                    linkCopy.push(link);
+                }
+
+            } else {
+                linkCopy[soloData.store.indexOf(storeName)] = link;
+            }
+            await updateDoc(docRef, {
+                storeNames: storeCopy,
+                storeLinks: linkCopy,
+            });
         }
     }
 
     return(
         <div className="border-black border-3 p-2 rounded-lg mt-2">
             <p>Add Store/Change Store Link</p>
-            <form>
-                <div onSubmit={(event) => handleSubmit(event)} className="flex flex-row gap-4">
+            <form onSubmit={(event) => {event.preventDefault(); handleSubmit(event)} }>
+                <div  className="flex flex-row gap-4">
                     <input onChange={(e) => setStore(e.target.value)} className='border-2 border-black rounded-lg p-1 w-full' type='text' placeholder="Store Name"/>
                     <input onChange={(e) => setLink(e.target.value)} className='border-2 border-black rounded-lg p-1 w-full' type='text' placeholder="Store Link"/>
                 </div>
