@@ -121,7 +121,8 @@ function Home() {
         }
         if(valid) {
             form.current.reset();
-
+            setMessage("Success! Refresh the page to see changes");
+            setError(true);
             //submit form
             const docRef = await setDoc(doc(db, "solos", title), {
                 composer: composer,

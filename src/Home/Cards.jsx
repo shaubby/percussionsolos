@@ -4,7 +4,7 @@ import Card from './Card.jsx'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, doc, getDoc, getDocs, collection, query } from "firebase/firestore";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Popup } from './Popup.jsx';
 import { POSSIBLE_ROLES } from 'firebase/ai';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -71,11 +71,16 @@ function compareDuration(a, b) {
 }
 
 function compareDifficulty(a, b) {
-    if (a.difficulty < b.difficulty) {
+    if (parseInt(a.difficulty) < parseInt(b.difficulty)) {
+        
         return 1;
+        
+        
     }
-    if (a.difficulty > b.difficulty) {
+    if (parseInt(a.difficulty) > parseInt(b.difficulty)) {
+
         return -1;
+        
     }
     return 0;
 }
@@ -86,7 +91,7 @@ function Cards() {
     const [data, setData] = useState(querySnapshot.docs.map((doc) => doc.data()));
     const [popup, setPopup] = useState();
     const [popupData, setPopupData] = useState(data[0]);
-    console.log(popupData);
+
     
     const openPopup = (tData) => {
         setPopup(true);
@@ -96,6 +101,8 @@ function Cards() {
     const closePopup = () => {
         setPopup(false);
     }
+
+    
 
     const handleClick = (button) => {
         if (button == 'difficulty') {
@@ -128,8 +135,13 @@ function Cards() {
             }
 
         }
-        console.log(data);
     }
+
+    useEffect(() => {
+        setData([...data].sort(compareStars));
+        setOrder('descending');
+        setSort('stars');
+    }, []);
 
     return (
         <div className='relative w-full h-full flex justify-center'>

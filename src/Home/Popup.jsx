@@ -70,7 +70,7 @@ export function Popup(props) {
                 className="mt-2"
                 />
             </div>
-            <div className="overflow-y-auto h-full ml-4 w-1/2 xl:text-xl text-sm ">
+            <div className="overflow-y-auto h-full ml-4 w-1/2 xl:text-xl text-sm px-2">
                 {props.data.description}
                 <div className="gap-5 mt-0">
                     {props.data.storeNames.map((store, i) => (
