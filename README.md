@@ -1,5 +1,7 @@
 # Marimba Solos
 
+https://marimbasolos.vercel.app/
+
 A website for a list of marimba solos where people can add solos and sort them by difficulty, duration, or number of stars.
 Click on any solo to open its menu. Add solos with the add a solo tab. You must refresh the site to see any updates. Star a solo by clicking on the star.
 
