@@ -1,12 +1,8 @@
-# React + Vite
+# Marimba Solos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A website for a list of marimba solos where people can add solos and sort them by difficulty, duration, or number of stars.
+Click on any solo to open its menu. Add solos with the add a solo tab. You must refresh the site to see any updates. Star a solo by clicking on the star.
 
-Currently, two official plugins are available:
+Built using Vite + React + Tailwind with Google Firebase's Firestore database.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+<img width="859" height="556" alt="Screenshot 2025-08-02 202041" src="https://github.com/user-attachments/assets/b9745d87-e37d-4e82-a78b-5166db1d87c2" />
